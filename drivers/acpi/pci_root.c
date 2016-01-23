@@ -419,6 +419,14 @@ out:
 }
 EXPORT_SYMBOL(acpi_pci_osc_control_set);
 
+int acpi_pci_bus_domain_nr(struct device *parent)
+{
+	struct acpi_device *acpi_dev = to_acpi_device(parent);
+	struct acpi_pci_root *root = acpi_dev->driver_data;
+
+	return root->segment;
+}
+
 static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
 {
 	u32 support, control, requested;
