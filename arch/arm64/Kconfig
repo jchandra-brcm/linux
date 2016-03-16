@@ -236,6 +236,9 @@ config PCI_DOMAINS_GENERIC
 config PCI_SYSCALL
 	def_bool PCI
 
+config PCI_MMCONFIG
+	bool
+
 source "drivers/pci/Kconfig"
 
 endmenu
