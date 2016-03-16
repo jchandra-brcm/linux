@@ -343,6 +343,15 @@ config ACPI_PCI_SLOT
 	  i.e., segment/bus/device/function tuples, with physical slots in
 	  the system.  If you are unsure, say N.
 
+config ACPI_PCI_HOST_GENERIC
+	bool "Generic ACPI based PCI controller"
+	depends on ARM64
+	select PCI_MMCONFIG
+	select PCI_GENERIC_ECAM
+	help
+	  Say Y if you want the generic ACPI based PCI controller
+	  implementation.
+
 config X86_PM_TIMER
 	bool "Power Management Timer Support" if EXPERT
 	depends on X86
