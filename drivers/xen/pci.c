@@ -27,7 +27,7 @@
 #include <asm/xen/hypervisor.h>
 #include <asm/xen/hypercall.h>
 #include "../pci/pci.h"
-#ifdef CONFIG_PCI_MMCONFIG
+#if defined(CONFIG_PCI_MMCONFIG) && defined(CONFIG_X86)
 #include <asm/pci_x86.h>
 #endif
 
@@ -212,7 +212,7 @@ static int __init register_xen_pci_notifier(void)
 
 arch_initcall(register_xen_pci_notifier);
 
-#ifdef CONFIG_PCI_MMCONFIG
+#if defined(CONFIG_PCI_MMCONFIG) && defined(CONFIG_X86)
 static int __init xen_mcfg_late(void)
 {
 	struct pci_mmcfg_region *cfg;
