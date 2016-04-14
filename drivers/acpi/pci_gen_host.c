@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * version 2 (GPLv2) along with this source code.
  */
+#include <linux/dmi.h>
 #include <linux/kernel.h>
 #include <linux/pci.h>
 #include <linux/pci-acpi.h>
@@ -60,14 +61,30 @@ static int mcfg_lookup(u16 seg, u8 bus_start, u8 bus_end)
 /*
  * create a new mapping
  */
+static const struct dmi_system_id pci_ops_table[] = {
+#ifdef CONFIG_PCI_HOST_THUNDER_ECAM
+	{
+		.ident = "Cavium Thunder",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "CAVIUM"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Thunder"),
+		},
+		.driver_data = &pci_thunder_ecam_ops,
+	},
+#endif
+	{}
+};
+
 static struct pci_config_window *pci_acpi_ecam_create(struct device *dev,
 			phys_addr_t addr, u16 seg, u8 bus_start, u8 bus_end)
 {
 	struct pci_config_window *cfg;
+	const struct dmi_system_id *sid;
 	int ret;
 
+	sid = dmi_first_match(pci_ops_table);
 	cfg = pci_generic_ecam_create(dev, addr, bus_start, bus_end,
-				      &pci_generic_ecam_default_ops);
+			sid ? sid->driver_data : &pci_generic_ecam_default_ops);
 	if (IS_ERR(cfg)) {
 		ret = PTR_ERR(cfg);
 		pr_err("%04x:%02x-%02x error %d mapping CAM\n", seg,

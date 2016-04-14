@@ -6,6 +6,7 @@
  * Copyright (C) 2015, 2016 Cavium, Inc.
  */
 
+#include <linux/acpi.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/ioport.h>
@@ -347,7 +348,7 @@ static int thunder_ecam_config_write(struct pci_bus *bus, unsigned int devfn,
 	return pci_generic_config_write(bus, devfn, where, size, val);
 }
 
-static struct pci_generic_ecam_ops pci_thunder_ecam_ops = {
+struct pci_generic_ecam_ops pci_thunder_ecam_ops = {
 	.bus_shift	= 20,
 	.pci_ops	= {
 		.map_bus        = pci_generic_ecam_map_bus,
@@ -364,6 +365,9 @@ MODULE_DEVICE_TABLE(of, thunder_ecam_of_match);
 
 static int thunder_ecam_probe(struct platform_device *pdev)
 {
+	if (!acpi_pci_disabled)
+		return -ENODEV;
+
 	return pci_host_common_probe(pdev, &pci_thunder_ecam_ops);
 }
 
