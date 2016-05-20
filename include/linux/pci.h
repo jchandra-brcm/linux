@@ -1722,12 +1722,22 @@ void pcibios_free_irq(struct pci_dev *dev);
 extern struct dev_pm_ops pcibios_pm_ops;
 #endif
 
-#ifdef CONFIG_PCI_MMCONFIG
-void __init pci_mmcfg_early_init(void);
+#if defined(CONFIG_PCI_MMCONFIG) || defined(CONFIG_ACPI_GENERIC_MCFG)
 void __init pci_mmcfg_late_init(void);
 #else
-static inline void pci_mmcfg_early_init(void) { }
 static inline void pci_mmcfg_late_init(void) { }
+#endif
+
+#ifdef CONFIG_PCI_MMCONFIG
+void __init pci_mmcfg_early_init(void);
+#else
+static inline void pci_mmcfg_early_init(void) { }
+#endif
+
+#ifdef CONFIG_ACPI_GENERIC_MCFG
+struct acpi_pci_root;
+int pci_mcfg_lookup(struct acpi_pci_root *root, struct resource *res,
+		    struct resource *busr);
 #endif
 
 int pci_ext_cfg_avail(void);
