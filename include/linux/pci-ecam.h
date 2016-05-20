@@ -45,6 +45,8 @@ struct pci_config_window {
 		void __iomem		*win;	/* 64-bit single mapping */
 		void __iomem		**winp; /* 32-bit per-bus mapping */
 	};
+	struct device			*parent;/* ECAM res was from this dev */
+	u16				domain;	/* optional */
 };
 
 /* create and free pci_config_window */
