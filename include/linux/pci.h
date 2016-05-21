@@ -1385,10 +1385,12 @@ static inline int pci_get_new_domain_nr(void) { return -ENOSYS; }
  * domains then this implementation will be used
  */
 #ifdef CONFIG_PCI_DOMAINS_GENERIC
+#ifndef CONFIG_ACPI
 static inline int pci_domain_nr(struct pci_bus *bus)
 {
 	return bus->domain_nr;
 }
+#endif
 void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent);
 #else
 static inline void pci_bus_assign_domain_nr(struct pci_bus *bus,
