@@ -22,6 +22,15 @@ struct acpi_pci_generic_root_info {
 	struct pci_config_window	*cfg;	/* config space mapping */
 };
 
+int pci_acpi_domain_nr(struct pci_bus *bus)
+{
+	struct pci_config_window *cfg = bus->sysdata;
+	struct acpi_device *adev = to_acpi_device(cfg->parent);
+	struct acpi_pci_root *root = acpi_driver_data(adev);
+
+	return root->segment;
+}
+
 /*
  * Lookup the bus range for the domain in MCFG, and set up config space
  * mapping.

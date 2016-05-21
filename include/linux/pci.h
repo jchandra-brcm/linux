@@ -1386,10 +1386,19 @@ static inline int pci_get_new_domain_nr(void) { return -ENOSYS; }
  * domains then this implementation will be used
  */
 #ifdef CONFIG_PCI_DOMAINS_GENERIC
-static inline int pci_domain_nr(struct pci_bus *bus)
+static inline int pci_domain_nr(struct pci_bus* bus)
 {
 	return bus->domain_nr;
 }
+/* Arch specific ACPI hook to set-up domain number */
+#ifdef CONFIG_ACPI
+int pci_acpi_domain_nr(struct pci_bus *bus);
+#else
+static inline int pci_acpi_domain_nr(struct pci_bus *bus)
+{
+	return -1;
+}
+#endif
 void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent);
 #else
 static inline void pci_bus_assign_domain_nr(struct pci_bus *bus,
