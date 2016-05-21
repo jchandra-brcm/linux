@@ -4946,6 +4946,10 @@ void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent)
 	static int use_dt_domains = -1;
 	int domain = -1;
 
+	/* no generic if ACPI is enabled */
+	if (!acpi_disabled)
+		return;
+
 	if (parent)
 		domain = of_get_pci_domain_nr(parent->of_node);
 	/*
